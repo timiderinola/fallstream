@@ -43,7 +43,7 @@
 \maketitle         
 
 \begin{abstract}
-Falls pose a significant health risk, particularly for older adults and individuals with medical conditions. While most existing research focuses on detecting falls after they occur, proactive approaches such as fall risk assessments are too infrequent to capture daily mobility fluctuations. This paper introduces a novel real-time fall probability framework that leverages real-world mobility and fall data and state-of-the-art time series techniques for fall detection in streaming mode. The proposed method eliminates the need for manual feature engineering and operates with high computational efficiency. Our findings demonstrate the potential for real-world implementation, offering a step toward more effective fall management strategies.
+Falls pose a significant health risk, particularly for older adults and individuals with medical conditions. Current fall detection techniques are often limited by the use of simulated datasets or segmentation methods that require prior knowledge of fall occurrences. This paper introduces a novel real-time fall probability framework leveraging more than 24 hours of real-world mobility and fall data collected from 41 participants using inertial measurement units in the FARSEEING dataset. We employ state-of-the-art time series techniques to detect fall probabilities in streaming mode without prior knowledge of fall events, eliminating the need for manual feature engineering. We further validate our FARSEEING-trained models on a continuous 7-day dataset from a single subject, containing four real-world falls. Our approach demonstrates high computational efficiency and achieves F$_1$ score up to 0.89 and a false alarm rate as low as 0.085 per hour on FARSEEING. This framework demonstrates the potential for real-world implementation, offering a promising step toward more realistic and effective fall management strategies, potentially reducing fall-related injuries and improving the quality of life for at-risk individuals.
 
 150--250 words.
 
@@ -51,6 +51,24 @@ Falls pose a significant health risk, particularly for older adults and individu
 \end{abstract}
 
 \section{Introduction}
+Falls constitute a major global health concern, representing the second leading cause of unintentional injury deaths worldwide, claiming an estimated 684,000 lives annually \cite{step_safely_2021}. People living with certain medical conditions and older adults, particularly those over 60, are at the highest risk \cite{vaishya2020falls}. Beyond fatalities, an estimated 37.3 million falls annually require medical attention, placing a significant burden on healthcare systems \cite{camp2024integrating}. Therefore, rapid fall detection is crucial for mitigating the severity of fall-related injuries and facilitating timely interventions. Given this critical need, researchers have explored various approaches to automatically identify fall events.
+
+A fall is an event that results in a person coming to rest unintentionally on the ground, floor, or other lower level \cite{step_safely_2021}. Automatically detecting a fall involves data capture, preprocessing, feature extraction, and classification \cite{liu2023review}. Since falls are unintentional by nature, the first and most important step of fall detection, which is data capture, is challenging. This has resulted in the widespread use of simulated fall data for training fall detection models. However, models trained on simulated falls have been shown to exhibit greatly degraded performance in real-world scenarios \cite{aderinola2024accurate}.
+
+Fall data capture involves recording the daily activities of participants for a set period of time in order to capture the characteristic features of their normal activities of daily living (ADLs) and falls. Such data can be recorded using wearable devices such as inertial measurement units (IMUs), or environmental devices, such as cameras and ambient sensors \cite{gaya2024deep}. However, due to their low-cost, portability, and efficiency, wearable devices are often the capture devices of choice, especially for long-term data capture free-living environments \cite{mohan2024artificial}.
+
+In order to distinguish between falls and ADLs, algorithms use could be threshold-based or machine learning (ML) based. Threshold-based methods such as \cite{de2021wearable} use cut-off values set on the sensor signals commonly have high false alarm rates, which could lead to "false alarm fatigue" \cite{mosquera2020automated}. On the other hand, ML methods such as  use conventional classifiers with manually crafted features \cite{son2022machine}, or deep representation learning \cite{liu2023deep}. Some more recent methods take a hybrid approach of preprocessing signals with set thresholds before passing them to an ML model \cite{fernandez2024edge}. However, most of these methods involve segmentation techniques that require prior knowledge of the occurrence of the fall in the test data, limiting their real-world applicability. Furthermore, developing robust fall detection systems for real-world applications presents unique challenges, including the diversity of fall characteristics and the need for continuous, real-time monitoring.
+
+Despite these advances in fall detection, a major limitation still remains the limited applicability in real-world scenarios, partly due to simulated data and partly due to unrealistic segmentation. Existing methods often struggle to operate effectively in truly real-time, continuous monitoring scenarios. This paper addresses this gap by introducing a novel real-time fall probability framework that operates on continuous sensor data without requiring prior knowledge of fall events. Our main contributions are:
+
+\begin{enumerate}
+    \item We present a framework for fall probabilities in streaming scenarios, which can improve fall detection outcomes by reducing false alarms and enabling the potential identification of pre-fall events.
+    \item We demonstrate realistic fall detection with fall probabilities on two real-world datasets.
+\end{enumerate}
+
+To satisfy conditions ideal for a real-time streaming environment, we perform no segmentation on the test set. Additionally, we perform no feature engineering and use efficient time series techniques. Our approach is evaluated on the FARSEEING dataset \cite{klenk2016farseeing}, a large real-world dataset with 92 fallers (mean age 76.1$\pm$12.6 years) and 208 verified falls captured using inertial sensors (accelerometer data). We also further evaluate models trained on FARSEEING on a continuous 7-day real-world accelerometer dataset of a subject, containing 4 falls. We use a fixed-size overlapping window approach for training. On the test set, we take a streaming approach by sliding over the full signal for each test participant and obtaining the probability of each window being a fall event.
+
+
 \subsection{Main Contributions}
 Please note that the first paragraph of a section or subsection is
 not indented. The first paragraph that follows a table, figure,
@@ -165,30 +183,30 @@ Company X and owns stock in Company Y. Author C is a member of committee Z.
 % BibTeX users should specify bibliography style 'splncs04'.
 % References will then be sorted and formatted in the correct style.
 %
-% \bibliographystyle{splncs04}
-% \bibliography{mybibliography}
+\bibliographystyle{splncs04}
+\bibliography{refs}
 %% Note that this preceding line implies that you store your BibTeX references in a file called 'mybibliography.bib'. If you instead store your references in a file with a different name, for instance 'references.bib', the preceding line should read '\bibliography{references}'. Whatever you do, DO NOT put the file name extension .bib inside the \bibliography command; this will trip up LaTeX compilers. 
 %
 % If you do not want to use BibTeX, you can also type up the bibliography exactly as you see fit, using the following structure:
-\begin{thebibliography}{8}
-% Note that this number 8 reserves an amount of space (equal to the natural width of the given number) for the label of your references; if you have more than 9 references, you will want to change this number to 18. If you have more than 19 references, this number is best changed to 88. If you have more than 99 references, I salute you.
-\bibitem{ref_article1}
-Author, F.: Article title. Journal \textbf{2}(5), 99--110 (2016)
+% \begin{thebibliography}{8}
+% % Note that this number 8 reserves an amount of space (equal to the natural width of the given number) for the label of your references; if you have more than 9 references, you will want to change this number to 18. If you have more than 19 references, this number is best changed to 88. If you have more than 99 references, I salute you.
+% \bibitem{ref_article1}
+% Author, F.: Article title. Journal \textbf{2}(5), 99--110 (2016)
 
-\bibitem{ref_lncs1}
-Author, F., Author, S.: Title of a proceedings paper. In: Editor,
-F., Editor, S. (eds.) CONFERENCE 2016, LNCS, vol. 9999, pp. 1--13.
-Springer, Heidelberg (2016). \doi{10.10007/1234567890}
+% \bibitem{ref_lncs1}
+% Author, F., Author, S.: Title of a proceedings paper. In: Editor,
+% F., Editor, S. (eds.) CONFERENCE 2016, LNCS, vol. 9999, pp. 1--13.
+% Springer, Heidelberg (2016). \doi{10.10007/1234567890}
 
-\bibitem{ref_book1}
-Author, F., Author, S., Author, T.: Book title. 2nd edn. Publisher,
-Location (1999)
+% \bibitem{ref_book1}
+% Author, F., Author, S., Author, T.: Book title. 2nd edn. Publisher,
+% Location (1999)
 
-\bibitem{ref_proc1}
-Author, A.-B.: Contribution title. In: 9th International Proceedings
-on Proceedings, pp. 1--2. Publisher, Location (2010)
+% \bibitem{ref_proc1}
+% Author, A.-B.: Contribution title. In: 9th International Proceedings
+% on Proceedings, pp. 1--2. Publisher, Location (2010)
 
-\bibitem{ref_url1}
-LNCS Homepage, \url{http://www.springer.com/lncs}, last accessed 2023/10/25
-\end{thebibliography}
+% \bibitem{ref_url1}
+% LNCS Homepage, \url{http://www.springer.com/lncs}, last accessed 2023/10/25
+% \end{thebibliography}
 \end{document}
